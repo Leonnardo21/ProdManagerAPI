@@ -18,6 +18,9 @@ namespace ProdManager.Data
         {
             modelBuilder.ApplyConfiguration(new ProductMap());
             modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.Entity<User>()
+                .HasIndex(u =>u.Registration)
+                .IsUnique();
         }
     }
 }

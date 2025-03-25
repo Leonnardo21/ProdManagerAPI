@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProdManager.Data;
 using ProdManager.Entities;
@@ -10,6 +11,7 @@ namespace ProdManager.Controllers
 {
     [ApiController]
     [Route("v1")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -66,6 +68,7 @@ namespace ProdManager.Controllers
                 {
                     Name = model.Name,
                     Email = model.Email,
+                    Registration = model.Registration,
                     Password = model.Password,
                     Phone = model.Phone,
                     Address = model.Address,
@@ -94,6 +97,7 @@ namespace ProdManager.Controllers
 
                 user.Name = model.Name;
                 user.Email = model.Email;
+                user.Registration = model.Registration;
                 user.Password = model.Password;
                 user.Phone = model.Phone;
                 user.Address = model.Address;

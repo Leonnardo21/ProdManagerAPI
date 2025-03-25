@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProdManager.Data;
 
@@ -11,9 +12,11 @@ using ProdManager.Data;
 namespace ProdManager.Migrations
 {
     [DbContext(typeof(ProdManagerDbContext))]
-    partial class ProdManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250325132140_UpdateTableUser")]
+    partial class UpdateTableUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

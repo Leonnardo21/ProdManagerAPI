@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProdManager.Data;
 using ProdManager.Entities;
@@ -10,6 +11,7 @@ namespace ProdManager.Controllers
 {
     [ApiController]
     [Route("v1")]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;

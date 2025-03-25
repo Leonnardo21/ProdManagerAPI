@@ -14,6 +14,7 @@ namespace ProdManager.Data.Mapping
             builder.Property(u => u.Id).ValueGeneratedOnAdd();
             builder.Property(u => u.Name).HasMaxLength(100).IsRequired();
             builder.Property(u => u.Email).HasMaxLength(100).IsRequired();
+            builder.Property(u => u.Registration).IsRequired();
             builder.Property(u => u.Password).HasMaxLength(100).IsRequired();
             builder.Property(u => u.Phone).HasMaxLength(20).IsRequired();
             builder.Property(u => u.Address).HasMaxLength(200);
