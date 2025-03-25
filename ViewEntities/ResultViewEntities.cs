@@ -2,6 +2,9 @@
 {
     public class ResultViewEntities<T>
     {
+        public T? Data { get; private set; }
+        public List<string> Errors { get; private set; } = new();
+        
         public ResultViewEntities(T data, List<string> errors)
         {
             Data = data;
@@ -23,7 +26,6 @@
             Errors.Add(error);
         }
 
-        public T? Data { get; private set; }
-        public List<string> Errors { get; private set; } = new();
+        
     }
 }

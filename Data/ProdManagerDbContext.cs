@@ -9,9 +9,9 @@ namespace ProdManager.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
+       public ProdManagerDbContext(DbContextOptions<ProdManagerDbContext> options)
+            : base(options)
         {
-            options.UseSqlServer("Server=localhost,1433;Database=DbProdManager;User ID=sa;Password=1q2w3e4r@#$;TrustServerCertificate=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

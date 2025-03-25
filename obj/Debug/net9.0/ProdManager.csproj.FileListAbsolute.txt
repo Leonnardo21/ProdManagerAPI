@@ -145,6 +145,7 @@ C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\ProdManager.AssemblyInf
 C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\ProdManager.csproj.CoreCompileInputs.cache
 C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\ProdManager.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\ProdManager.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\ProdManager.sourcelink.json
 C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\scopedcss\bundle\ProdManager.styles.css
 C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\leoso\source\repos\ProdManager\obj\Debug\net9.0\staticwebassets.development.json

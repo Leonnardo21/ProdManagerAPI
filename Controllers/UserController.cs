@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProdManager.Data;
 using ProdManager.Entities;
 using ProdManager.Extensions;
+using ProdManager.Repositories.Interface;
 using ProdManager.ViewEntities;
 
 namespace ProdManager.Controllers
@@ -11,11 +12,11 @@ namespace ProdManager.Controllers
     [Route("v1")]
     public class UserController : ControllerBase
     {
-        private readonly ProdManagerDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(ProdManagerDbContext context)
+        public UserController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         [HttpGet("users")]
@@ -23,8 +24,8 @@ namespace ProdManager.Controllers
         {
             try
             {
-                var users = await _context.Users.ToListAsync();
-                return Ok(new ResultViewEntities<List<User>>(users));
+                var users = await _userRepository.GetAllUsersAsync();
+                return Ok(new ResultViewEntities<List<User>>(users.ToList()));
             }
             catch
             {
@@ -38,12 +39,11 @@ namespace ProdManager.Controllers
         {
             try
             {
-                var user = await _context.Users.FirstOrDefaultAsync(p => p.Id == id);
+                var user = await _userRepository.GetUserByIdAsync(id);
 
                 if (user == null)
-                {
                     return NotFound(new ResultViewEntities<User>("PCXE02 - Conteúdo não encotrado"));
-                }
+
 
                 return Ok(new ResultViewEntities<User>(user));
             }
@@ -57,7 +57,6 @@ namespace ProdManager.Controllers
         [Route("users")]
         public async Task<IActionResult> PostAsync([FromBody] User model)
         {
-
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewEntities<User>(ModelState.GetErrors()));
 
@@ -73,9 +72,7 @@ namespace ProdManager.Controllers
                     Role = model.Role
                 };
 
-                await _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
-
+                await _userRepository.AddUserAsync(user);
                 return Created($"v1/users/{user.Id}", new ResultViewEntities<User>(user));
             }
             catch
@@ -90,7 +87,7 @@ namespace ProdManager.Controllers
         {
             try
             {
-                var user = await _context.Users.FirstOrDefaultAsync(p => p.Id == id);
+                var user = await _userRepository.GetUserByIdAsync(id);
 
                 if (user == null)
                     return NotFound(new ResultViewEntities<User>("PCXE04 - Conteúdo não encontrado"));
@@ -101,12 +98,10 @@ namespace ProdManager.Controllers
                 user.Phone = model.Phone;
                 user.Address = model.Address;
                 user.Role = model.Role;
-              
 
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync();
 
-                return Ok(user);
+                await _userRepository.UpdateUserAsync(user);
+                return Ok(new ResultViewEntities<User>(user));
             }
             catch
             {
@@ -120,12 +115,11 @@ namespace ProdManager.Controllers
         {
             try
             {
-                var users = await _context.Users.FirstOrDefaultAsync(p => p.Id == id);
+                var users = await _userRepository.GetUserByIdAsync(id);
                 if (users == null)
                     return NotFound(new ResultViewEntities<User>("PCXE05 - Conteúdo não encontrado"));
-                _context.Users.Remove(users);
-                await _context.SaveChangesAsync();
-                return Ok();
+                await _userRepository.DeleteUserAsync(id);
+                return NoContent();
             }
             catch
             {

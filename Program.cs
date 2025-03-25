@@ -1,33 +1,38 @@
+using Microsoft.EntityFrameworkCore;
 using ProdManager.Data;
+using ProdManager.Repositories;
+using ProdManager.Repositories.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Adiciona serviços ao contêiner
+var corsPolicy = "_myAllowSpecificOrigins";
 builder.Services
     .AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
-        // Suprime o filtro de estado de modelo inválido
         options.SuppressModelStateInvalidFilter = true;
     });
 
-// Configura o DbContext com a string de conexão
-builder.Services.AddDbContext<ProdManagerDbContext>();
+builder.Services.AddDbContext<ProdManagerDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.AllowAnyOrigin()
-             .AllowAnyMethod()
-             .AllowAnyHeader();
-    });
+    options.AddPolicy(name: corsPolicy,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
 });
 
 var app = builder.Build();
 
-// Mapeia os controladores
+app.UseCors(corsPolicy);
 app.MapControllers();
-
-// Executa o aplicativo
 app.Run();

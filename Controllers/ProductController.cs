@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProdManager.Data;
 using ProdManager.Entities;
 using ProdManager.Extensions;
+using ProdManager.Repositories.Interface;
 using ProdManager.ViewEntities;
 
 namespace ProdManager.Controllers
@@ -11,21 +12,21 @@ namespace ProdManager.Controllers
     [Route("v1")]
     public class ProductController : ControllerBase
     {
-        private readonly ProdManagerDbContext _context;
+        private readonly IProductRepository _productRepository;
 
-        public ProductController(ProdManagerDbContext context)
+        public ProductController(IProductRepository productRepository)
         {
-            _context = context;
+            _productRepository = productRepository;
         }
 
         [HttpGet]
         [Route("products")]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             try
             {
-                var products = await _context.Products.ToListAsync();
-                return Ok(new ResultViewEntities<List<Product>>(products));
+                var products = await _productRepository.GetAllAsync();
+                return Ok(new ResultViewEntities<List<Product>>(products.ToList()));
             }
             catch
             {
@@ -39,12 +40,9 @@ namespace ProdManager.Controllers
         {
             try
             {
-                var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-
-                if (product == null) {
+                var product = await _productRepository.GetByIdAsync(id);
+                if (product == null)
                     return NotFound(new ResultViewEntities<Product>("PCXE02 - Conteúdo não encotrado"));
-                }
-
                 return Ok(new ResultViewEntities<Product>(product));
             }
             catch
@@ -57,7 +55,6 @@ namespace ProdManager.Controllers
         [Route("products")]
         public async Task<IActionResult> PostAsync([FromBody] EditorProductViewEntities model)
         {
-
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewEntities<Product>(ModelState.GetErrors()));
 
@@ -77,9 +74,7 @@ namespace ProdManager.Controllers
                     Expiration = model.Expiration
                 };
 
-                await _context.Products.AddAsync(product);
-                await _context.SaveChangesAsync();
-
+                await _productRepository.PostAsync(product);
                 return Created($"v1/products/{product.Id}", new ResultViewEntities<Product>(product));
             }
             catch
@@ -94,7 +89,7 @@ namespace ProdManager.Controllers
         {
             try
             {
-                var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+                var product = await _productRepository.GetByIdAsync(id);
 
                 if (product == null)
                     return NotFound(new ResultViewEntities<Product>("PCXE04 - Conteúdo não encontrado"));
@@ -110,9 +105,7 @@ namespace ProdManager.Controllers
                 product.Manufacture = model.Manufacture;
                 product.Expiration = model.Expiration;
 
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
-
+                await _productRepository.PutAsync(product);
                 return Ok(product);
             }
             catch
@@ -127,12 +120,12 @@ namespace ProdManager.Controllers
         {
             try
             {
-                var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+                var product = await _productRepository.GetByIdAsync(id);
                 if (product == null)
                     return NotFound(new ResultViewEntities<Product>("PCXE05 - Conteúdo não encontrado"));
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
-                return Ok();
+
+                await _productRepository.DeleteAsync(id);
+                return NoContent();
             }
             catch
             {
