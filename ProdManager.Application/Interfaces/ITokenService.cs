@@ -2,7 +2,7 @@
 
 namespace ProdManager.Application;
 
-public interface IAuthService
+public interface ITokenService
 {
     string GenerateToken(User user);
 }
