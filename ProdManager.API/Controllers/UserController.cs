@@ -7,6 +7,7 @@ using ProdManager.Domain.Entities;
 namespace ProdManager.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
@@ -74,7 +75,6 @@ public class UserController : ControllerBase
         
         userToUpdate.Name = user.Name;
         userToUpdate.Email = user.Email;
-        userToUpdate.PasswordHash = user.PasswordHash;
         userToUpdate.Address = user.Address;
         userToUpdate.Phone = user.Phone;
         userToUpdate.IsActive = user.IsActive;
